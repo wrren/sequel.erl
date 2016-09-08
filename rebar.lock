@@ -1,0 +1,6 @@
+{"1.1.0",
+[{<<"emysql">>,{pkg,<<"inaka_emysql">>,<<"0.4.2">>},0}]}.
+[
+{pkg_hash,[
+ {<<"emysql">>, <<"7FAC76DECDA57D1FD0458D20D682D9E09156CB4C389F98FED874E42DD0252041">>}]}
+].
