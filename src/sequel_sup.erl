@@ -9,4 +9,8 @@ start_link() ->
     supervisor:start_link( { local, ?SERVER }, ?MODULE, [] ).
 
 init( [] ) ->
-    { ok, { { one_for_all, 0, 1 }, [] } }.
+    { ok, { { one_for_all, 1, 1 }, [
+        #{  id      => sl_query_map,
+            start   => { sl_query_map, start_link, [] },
+            modules => [sl_query_map] }
+    ] } }.
