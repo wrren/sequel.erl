@@ -1,4 +1,12 @@
 [{<<"emysql">>,
   {git,"git://github.com/inaka/Emysql.git",
        {ref,"995fd11be9e662630d5555edd44791d8a723463d"}},
+  0},
+ {<<"mysql">>,
+  {git,"git@github.com:mysql-otp/mysql-otp.git",
+       {ref,"e0a9ccb42c893212c19a76f6e35fc6df5e33c617"}},
+  0},
+ {<<"poolboy">>,
+  {git,"git://github.com/devinus/poolboy.git",
+       {ref,"d378f996182daa6251ad5438cee4d3f6eb7ea50f"}},
   0}].

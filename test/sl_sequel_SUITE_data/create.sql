@@ -1,0 +1,5 @@
+CREATE TABLE sequel_test_table (
+    id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    data    VARCHAR( 60 ) NOT NULL,
+    PRIMARY KEY( id )
+) ENGINE=InnoDB CHARSET=utf8

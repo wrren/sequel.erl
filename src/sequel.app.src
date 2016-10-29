@@ -1,16 +1,19 @@
-{application, sequel,
- [{description, "An OTP application"},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {mod, { sequel_app, []}},
-  {applications,
-   [kernel,
-    stdlib
-   ]},
-  {env,[]},
-  {modules, []},
-
-  {maintainers, []},
-  {licenses, []},
-  {links, []}
+{ application, sequel,
+[
+    { description, "SQL Abstraction Library" },
+    { vsn, "0.1.0" },
+    { registered, [] },
+    { mod, { sequel_app, [] } },
+    { applications,
+    [
+        kernel,
+        stdlib,
+        poolboy,
+        mysql
+    ] },
+    { env,[] },
+    { modules, [] },
+    { maintainers, [] },
+    { licenses, [] },
+    { links, [] }
  ]}.

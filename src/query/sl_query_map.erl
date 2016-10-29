@@ -41,7 +41,7 @@ load_dir( Path ) when is_list( Path ) ->
 			{ ok, lists:filtermap( fun( Filename ) ->
 				case load_file( filename:join( Path, Filename ) ) of
 					{ ok, Query } 		-> { true, Query };
-					{ error, Reason }	-> false
+					{ error, _Reason }	-> false
 				end end, Filenames ) };
 		{ error, Reason } ->
 			{ error, Reason }
