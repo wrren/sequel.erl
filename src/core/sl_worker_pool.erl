@@ -9,13 +9,15 @@ start_link() ->
 
 init( _ ) ->
     Pools = application:get_env( sequel, pools, [] ),
-    PoolSpec = lists:map(   fun ( { PoolName, SizeArgs, WorkerArgs } ) ->
-                                PoolArgs = [    { name, { local, PoolName } },
+    PoolSpec = lists:map(   fun ( { PoolId, SizeArgs, WorkerArgs } ) ->
+                                PoolArgs = [    { name, { local, PoolId } },
                                                 { worker_module, sl_worker } ] ++ SizeArgs,
-                                poolboy:child_spec( PoolName, PoolArgs, [PoolName | WorkerArgs] )
+                                { size, PoolSize } = lists:keyfind( size, 1, SizeArgs ),
+                                poolboy:child_spec( PoolId, PoolArgs, [{ PoolId, PoolSize } | WorkerArgs] )
                          end, Pools ),
     { ok, { { one_for_one, 10, 10 }, PoolSpec } }.
 
-add_pool( Name, PoolArgs, WorkerArgs ) ->
-    ChildSpec = poolboy:child_spec( Name, PoolArgs, [Name | WorkerArgs] ),
+add_pool( PoolId, PoolArgs, WorkerArgs ) ->
+    { size, PoolSize } = lists:keyfind( size, 1, PoolArgs ),
+    ChildSpec = poolboy:child_spec( PoolId, PoolArgs, [{ PoolId, PoolSize } | WorkerArgs] ),
     supervisor:start_child( ?MODULE, ChildSpec ).

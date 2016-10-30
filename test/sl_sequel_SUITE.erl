@@ -19,8 +19,10 @@ create( _Config ) ->
     ok = sequel:query( create ).
 
 insert( _Config ) ->
-    ok = sequel:execute( insert, ["Hello"] ),
-    ok = sequel:execute( insert, ["World"] ).
+    "INSERT INTO sequel_test_table ( data ) VALUES ( ? )" = sl_query_map:get( insert ),
+    sequel:prepare( insert, sl_query_map:get( insert ) ),
+    ok = sequel:execute( insert, [<<"Hello">>] ),
+    ok = sequel:execute( insert, [<<"World">>] ).
 
 select( _Config ) ->
     { ok, [#{ id := 1, data := "Hello" }] } = sequel:execute( select, [1] ),

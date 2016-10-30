@@ -1,4 +1,4 @@
-CREATE TABLE sequel_test_table (
+CREATE TABLE IF NOT EXISTS sequel_test_table (
     id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
     data    VARCHAR( 60 ) NOT NULL,
     PRIMARY KEY( id )

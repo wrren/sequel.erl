@@ -3,29 +3,37 @@
 -export( [connect/2, prepare/3, query/2, execute/3] ).
 -behaviour( sl_engine ).
 
-connect( PoolId, Args = #{  username    := Username, 
+-include_lib( "emysql/include/emysql.hrl" ).
+-define( POOL_NAME, ?MODULE ).
+
+connect( { PoolId, Size }, Args = #{  username    := Username, 
                             password    := Password,
                             database    := Database } ) ->
-    case mysql:start_link(      PoolId, maps:get( host, Args, "localhost" ), 
-                                maps:get( port, Args, undefined ), Username, Password, Database ) of
-        { ok, _Pid }        -> { ok, PoolId };
-        { error, Reason }   -> { error, Reason }
+    case emysql:add_pool( PoolId, [ { host, maps:get( host, Args, "localhost" ) },
+                                    { port, maps:get( port, Args, 3306 ) },
+                                    { encoding, maps:get( encoding, Args, utf8 ) },
+                                    { size, Size },
+                                    { user, Username },
+                                    { password, Password },
+                                    { database, Database }] ) of
+        ok                              -> { ok, { pool, PoolId } };
+        { error, pool_already_exists }  -> { ok, { pool, PoolId } }
     end.
 
 prepare( _Connection, Statement, SQL ) ->
-    mysql:prepare( Statement, SQL ).
+    ok = emysql:prepare( Statement, list_to_binary( SQL ) ).
 
-query( Connection, SQL ) ->
-    result( mysql:query( Connection, SQL ) ).
+query( { pool, PoolId }, SQL ) ->
+    result( emysql:execute( PoolId, SQL ) ).
 
-execute( Connection, Statement, Args ) ->
-    result( mysql:execute( Connection, Statement, Args ) ).
+execute( { pool, PoolId }, Statement, Args ) ->
+    result( emysql:execute( PoolId, Statement, Args ) ).
 
-result( { updated, _Res } ) -> ok;
+result( #ok_packet{} ) ->
+    ok;
 
-result( { data, Res } ) ->
-    ColumnNames = [Name || { _Table, _Field, _Length, Name } <- mysql:get_result_field_info( Res ) ],
-    { ok, lists:map( fun( Row ) -> maps:from_list( lists:zip( ColumnNames, Row ) ) end, mysql:get_result_rows( Res ) ) };
+result( #result_packet{ field_list = ColumnNames, rows = Rows } ) -> 
+    { ok, lists:map( fun( Row ) -> maps:from_list( lists:zip( ColumnNames, Row ) ) end, Rows ) };
 
-result( { error, Reason } ) ->
-    { error, mysql:get_result_reason( Reason ) }.
+result( #error_packet{ msg = Reason } ) ->
+    { error, Reason }.
