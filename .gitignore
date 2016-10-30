@@ -15,3 +15,4 @@ logs
 _build
 .idea
 .vscode/
+config/test.config

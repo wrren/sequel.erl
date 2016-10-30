@@ -8,7 +8,7 @@ all()       -> [{ group, load_create_select_drop }].
 
 init_per_suite( Config ) ->
     application:ensure_all_started( sequel ),
-    { ok, _Pool } = sequel:connect( ct:get_config( connect_opts ) ),
+    sequel:connect( ct:get_config( connect_opts ) ),
     Config.
 
 load( Config ) ->

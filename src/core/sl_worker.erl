@@ -37,8 +37,8 @@ execute( Worker, Statement, Args ) ->
     statements      :: [atom()]
 } ).
 
-init( [EngineMod, Args] ) ->
-    case EngineMod:connect( Args ) of
+init( [PoolId, EngineMod, Args] ) ->
+    case EngineMod:connect( PoolId, Args ) of
         { ok, Connection } ->
             { ok, #state{ connection = Connection, engine = EngineMod, statements = [] } };
         { error, Reason } ->

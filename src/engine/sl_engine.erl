@@ -17,7 +17,7 @@
 %%  @doc Connect to the database using the provided options. Option formatting depends on the
 %%  database type selected.
 %%
--callback connect( Options :: map() ) -> { ok, Connection :: connection() } | { error, term() }.
+-callback connect( PoolId :: atom(), Options :: map() ) -> { ok, Connection :: connection() } | { error, term() }.
 
 %%
 %%  @doc Prepare a prepared statement

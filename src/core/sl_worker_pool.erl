@@ -12,10 +12,10 @@ init( _ ) ->
     PoolSpec = lists:map(   fun ( { PoolName, SizeArgs, WorkerArgs } ) ->
                                 PoolArgs = [    { name, { local, PoolName } },
                                                 { worker_module, sl_worker } ] ++ SizeArgs,
-                                poolboy:child_spec( PoolName, PoolArgs, WorkerArgs )
+                                poolboy:child_spec( PoolName, PoolArgs, [PoolName | WorkerArgs] )
                          end, Pools ),
     { ok, { { one_for_one, 10, 10 }, PoolSpec } }.
 
 add_pool( Name, PoolArgs, WorkerArgs ) ->
-    ChildSpec = poolboy:child_spec( Name, PoolArgs, WorkerArgs ),
+    ChildSpec = poolboy:child_spec( Name, PoolArgs, [Name | WorkerArgs] ),
     supervisor:start_child( ?MODULE, ChildSpec ).

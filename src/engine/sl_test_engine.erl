@@ -6,11 +6,11 @@
 -behaviour( sl_engine ).
 -behaviour( gen_server ).
 %% public interface
--export( [connect/1, prepare/3, query/2, execute/3] ).
+-export( [connect/2, prepare/3, query/2, execute/3] ).
 %% gen_server callbacks
 -export( [init/1, handle_call/3, handle_cast/2, handle_info/2, code_change/3, terminate/2] ).
 
-connect( _ ) ->
+connect( _, _ ) ->
     { ok, Pid } = gen_server:start_link( ?MODULE, [], [] ),
     { ok, Pid }.
 
