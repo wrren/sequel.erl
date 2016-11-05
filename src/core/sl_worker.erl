@@ -50,8 +50,12 @@ handle_call( { prepare, Statement, SQL }, _From, State = #state{ connection = Co
         true    -> 
             { reply, ok, State };
         false   ->
-            EngineMod:prepare( Connection, Statement, SQL ),
-            { reply, ok, State#state{ statements = [Statement | Statements] } }
+            case EngineMod:prepare( Connection, Statement, SQL ) of
+                { ok, NewConnection } ->
+                    { reply, ok, State#state{ connection = NewConnection, statements = [Statement | Statements] } };
+                { error, Reason } ->
+                    { reply, { error, Reason }, State }
+            end
     end;
 
 handle_call( { execute, Statement, Args }, _From, State = #state{ connection = Connection, engine = EngineMod } ) ->

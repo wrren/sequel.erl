@@ -18,8 +18,8 @@ connect( Args ) ->
 %%
 connect( PoolName, Args = #{ engine := Engine } ) when is_atom( PoolName ) ->
     case Engine of
-        mysql   -> connect( ?DEFAULT_POOL, sl_mysql_engine, Args );
-        test    -> connect( ?DEFAULT_POOL, sl_test_engine, Args );
+        sqlite  -> connect( PoolName, sl_sqlite_engine, Args );
+        test    -> connect( PoolName, sl_test_engine, Args );
         _       -> { error, undefined_db_engine }
     end.
 

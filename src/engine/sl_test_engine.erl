@@ -32,7 +32,7 @@ init( _ ) ->
 	{ ok, #state{} }.
 
 handle_call( { prepare, _Statement, _SQL }, _From, State ) ->
-	{ reply, ok, State };
+	{ reply, { ok, self() }, State };
 
 handle_call( { query, _SQL }, _From, State ) ->
     { reply, { ok, [#{ id => 1, data => "Hello" }, #{ id => 2, data => "World" }] }, State };

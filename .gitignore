@@ -16,3 +16,4 @@ _build
 .idea
 .vscode/
 config/test.config
+compile_commands.json

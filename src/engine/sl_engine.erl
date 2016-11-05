@@ -22,7 +22,7 @@
 %%
 %%  @doc Prepare a prepared statement
 %%
--callback prepare( Connection :: connection(), Statement :: statement(), SQL :: sql() ) -> ok | { error, term() }.
+-callback prepare( Connection :: connection(), Statement :: statement(), SQL :: sql() ) -> { ok, Connection :: connection() } | { error, term() }.
 
 %%
 %%  @doc Execute a raw query

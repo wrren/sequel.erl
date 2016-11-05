@@ -38,11 +38,11 @@ get( Query ) when is_atom( Query ) ->
 load_dir( Path ) when is_list( Path ) ->
 	case file:list_dir( Path ) of
 		{ ok, Filenames } ->
-			{ ok, lists:filtermap( fun( Filename ) ->
+			{ ok, lists:usort( lists:filtermap( fun( Filename ) ->
 				case load_file( filename:join( Path, Filename ) ) of
 					{ ok, Query } 		-> { true, Query };
 					{ error, _Reason }	-> false
-				end end, Filenames ) };
+				end end, Filenames ) ) };
 		{ error, Reason } ->
 			{ error, Reason }
 	end.

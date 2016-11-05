@@ -9,7 +9,7 @@
         kernel,
         stdlib,
         poolboy,
-        emysql
+        esqlite
     ] },
     { env,[] },
     { modules, [] },
