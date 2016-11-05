@@ -17,11 +17,10 @@ load( Config ) ->
 
 create( Config ) ->
     Conn = ?config( conn, Config ),
-    { ok, _ } = sl_sqlite_engine:query( Conn, "CREATE TABLE sequel_test_table ( id INTEGER PRIMARY KEY ASC, data TEXT )" ).
+    { ok, _ } = sl_sqlite_engine:query( Conn, sl_query_map:get( create ) ).
 
 insert( Config ) ->
     Conn = ?config( conn, Config ),
-    "INSERT INTO sequel_test_table ( data ) VALUES ( ? )" = sl_query_map:get( insert ),
     { ok, Conn2 }   = sl_sqlite_engine:prepare( Conn, insert, sl_query_map:get( insert ) ),
     { ok, _ }       = sl_sqlite_engine:execute( Conn2, insert, [<<"Hello">>] ),
     { ok, _ }       = sl_sqlite_engine:execute( Conn2, insert, [<<"World">>] ).

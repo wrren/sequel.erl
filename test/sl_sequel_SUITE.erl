@@ -19,7 +19,6 @@ create( _Config ) ->
     { ok, _ } = sequel:query( create ).
 
 insert( _Config ) ->
-    "INSERT INTO sequel_test_table ( data ) VALUES ( ? )" = sl_query_map:get( insert ),
     sequel:prepare( insert, sl_query_map:get( insert ) ),
     { ok, _ } = sequel:execute( insert, [<<"Hello">>] ),
     { ok, _ } = sequel:execute( insert, [<<"World">>] ).
