@@ -18,9 +18,10 @@ connect( Args ) ->
 %%
 connect( PoolName, Args = #{ engine := Engine } ) when is_atom( PoolName ) ->
     case Engine of
-        sqlite  -> connect( PoolName, sl_sqlite_engine, Args );
-        test    -> connect( PoolName, sl_test_engine, Args );
-        _       -> { error, undefined_db_engine }
+        sqlite      -> connect( PoolName, sl_sqlite_engine, Args );
+        postgres    -> connect( PoolName, sl_postgres_engine, Args );
+        test        -> connect( PoolName, sl_test_engine, Args );
+        _           -> { error, undefined_db_engine }
     end.
 
 %%

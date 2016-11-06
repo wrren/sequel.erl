@@ -9,7 +9,8 @@
         kernel,
         stdlib,
         poolboy,
-        esqlite
+        esqlite,
+        epgsql
     ] },
     { env,[] },
     { modules, [] },
