@@ -10,4 +10,4 @@ add_pool_test() ->
     ?assertMatch( ok, sequel:prepare( select, "SELECT * FROM foo" ) ),
     ?assertMatch( { ok, [#{ id := 1 }, #{ id := 2 }] }, sequel:execute( select, [] ) ),
     ?assertMatch( { ok, [#{ id := 3 }, #{ id := 4 }] }, sequel:execute( select, [3, 4] ) ),
-    sequel_sup:stop().
+    application:stop( sequel ).

@@ -6,6 +6,8 @@
 %% public interface
 -export( [start_link/0, stop/0, get/1, put/2, load_dir/1, load_file/1, load_file/2] ).
 
+-type query_id() :: atom() | { atom(), atom() }.
+
 %%
 %%	@doc Start the query map
 %%
@@ -23,8 +25,8 @@ stop() ->
 %%
 %%	@doc Get the query string corresponding to the given query ID atom
 %%
--spec get( atom() ) -> undefined | string().
-get( Query ) when is_atom( Query ) ->
+-spec get( query_id() ) -> undefined | string().
+get( Query ) ->
 	case ets:lookup( ?MODULE, Query ) of
 		[{ Query, SQL }]	-> SQL;
 		_ 					-> undefined
@@ -34,7 +36,7 @@ get( Query ) when is_atom( Query ) ->
 %% 	@doc Enumerate all SQL files in the given directory and generate ID->SQL mappings where the 
 %%	ID for a given query is the atom form of the SQL file name minus the file extension.
 %%
--spec load_dir( string() ) -> { ok, [atom()] } | { error, term() }.
+-spec load_dir( string() ) -> { ok, [query_id()] } | { error, term() }.
 load_dir( Path ) when is_list( Path ) ->
 	case file:list_dir( Path ) of
 		{ ok, Filenames } ->
@@ -51,7 +53,7 @@ load_dir( Path ) when is_list( Path ) ->
 %%	@doc Load the SQL contained in the given file into the query map. The query ID for the
 %%	SQL read from the file will be the file basename, stripped of its extension, converted to an atom
 %%
--spec load_file( string() ) -> { ok, atom() } | { error, term() }.
+-spec load_file( string() ) -> { ok, query_id() } | { error, term() }.
 load_file( Path ) when is_list( Path ) ->
 	load_file( Path, list_to_atom( filename:rootname( filename:basename( Path ) ) ) ).
 
@@ -59,7 +61,8 @@ load_file( Path ) when is_list( Path ) ->
 %%	@doc Load the SQL contained in the given file into the query map and associate it with the 
 %%	given ID
 %%
-load_file( Path, QueryID ) when is_list( Path ), is_atom( QueryID ) ->
+-spec load_file( string(), query_id() ) -> { ok, query_id() } | { error, term() }.
+load_file( Path, QueryID ) when is_list( Path ) ->
 	case file:read_file( Path ) of
 		{ ok, Binary } ->
 			?MODULE:put( QueryID, binary_to_list( Binary ) ),
@@ -72,7 +75,7 @@ load_file( Path, QueryID ) when is_list( Path ), is_atom( QueryID ) ->
 %%	@doc Add a query string and associate it with the given query ID atom
 %%
 -spec put( atom(), string() ) -> ok.
-put( Query, SQL ) when is_atom( Query ), is_list( SQL ) ->
+put( Query, SQL ) when is_list( SQL ) ->
 	gen_server:call( ?MODULE, { put, Query, SQL } ).
 
 %%
