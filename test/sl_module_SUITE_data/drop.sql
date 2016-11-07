@@ -1,0 +1,1 @@
+DROP TABLE sequel_test_table

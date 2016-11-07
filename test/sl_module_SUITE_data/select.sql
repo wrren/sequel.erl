@@ -1,0 +1,1 @@
+SELECT * FROM sequel_test_table WHERE id = ? LIMIT 1
