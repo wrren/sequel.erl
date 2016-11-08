@@ -75,7 +75,7 @@ execute( Statement, Args ) ->
 %%  If the statement hasn't been prepared, but a query has been loaded into the query map with the same
 %%  name, the query SQL will be prepared and then executed.
 %%
-execute( PoolName, Statement, Args ) ->
+execute( PoolName, Statement, Args ) when is_list( Args ) ->
     case { sl_statement_map:get( PoolName, Statement ), sl_query_map:get( Statement ) } of
         { undefined, undefined } ->
             { error, undefined_statement };
@@ -89,4 +89,7 @@ execute( PoolName, Statement, Args ) ->
                 sl_worker:prepare( Worker, Statement, SQL ),
                 sl_worker:execute( Worker, Statement, Args )
             end )
-    end.
+    end;
+
+execute( PoolName, Statement, Args ) ->
+    execute( PoolName, Statement, [Args] ).

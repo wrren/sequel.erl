@@ -29,7 +29,7 @@ insert( _Config ) ->
     sql_test:insert( [<<"World">>] ).
 
 select( _Config ) ->
-    { ok, [#{ id := 1, data := <<"Hello">> }] } = sql_test:select( [1] ),
+    { ok, [#{ id := 1, data := <<"Hello">> }] } = sql_test:select( 1 ),
     { ok, [#{ id := 2, data := <<"World">> }] } = sql_test:select( [2] ).
 
 drop( _Config ) ->

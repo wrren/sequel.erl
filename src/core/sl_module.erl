@@ -77,7 +77,7 @@ query_functions( Module, Name, SQL ) ->
     ArgsVar     = erl_syntax:variable( "Args" ),
     PoolVar     = erl_syntax:variable( "PoolId" ),
     Statement   = erl_syntax:tuple( [erl_syntax:atom( Module ), erl_syntax:atom( Name )] ),
-
+    
     Body1        = [
         erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [Statement, erl_syntax:string( SQL )] ),
         erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [Statement, erl_syntax:list( [] )] )
