@@ -20,6 +20,7 @@ Usage
 %%  Directory Structure (priv/sql):
 %%  priv/
 %%      sql/
+%%          item_count.sql
 %%          user/
 %%              create_table.sql
 %%              create.sql
@@ -27,16 +28,30 @@ Usage
 %%
 
 application:start( sequel ),
-sequel:connect( #{ engine => sqlite, path => filename:join( code:priv_dir( ?APPLICATION ), "db.sqlite" ) } ),
+sequel:connect( #{ pool_size => 1, engine => sqlite, path => filename:join( code:priv_dir( ?APPLICATION ), "db.sqlite" ) } ),
+
+{ ok, [Count] } = sequel:execute( item_count, [] ),
+
 sl_query_map:load_dir( filename:join( code:priv_dir( ?APPLICATION ), "sql" ) ),
 sl_query_map:generate_modules(),
 
+%% Prepares and executes sql/user/create_table.sql
 user:create_table(),
+
+%% Prepares and executes sql/user/create.sql, binding the given arguments to the prepared statement
 user:create( ["user@example.com", "Joe", "Bloggs"] ),
+
+%% Prepares and executes sql/user/find_by_email.sql, binding the given arguments to the prepared statement
 { ok, [#{   id := ID, 
             email := "user@example.com", 
             first_name := "Joe", 
-            last_name := "Bloggs" }] } = user:find_by_email( "user@example.com" ).
+            last_name := "Bloggs" }] } = user:find_by_email( ["user@example.com"] ),
+
+%% All queries are available from the root sequel module using tuples, allowing arbitrary levels of nesting
+{ ok, [#{   id := ID, 
+            email := "user@example.com", 
+            first_name := "Joe", 
+            last_name := "Bloggs" }] } = sequel:execute( { user, find_by_email }, ["user@example.com"] ).
 
 
 ```
