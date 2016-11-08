@@ -34,7 +34,7 @@ compile( #sequel_module{ name = Name, queries = Queries } ) ->
     FunctionExports     = query_function_exports( QueriesUnique ),
     Functions           = lists:foldl(  fun( Functions, Out ) -> 
                                             lists:append( Functions, Out )
-                                        end, [], [query_functions( ID, SQL ) || { ID, SQL } <- QueriesUnique] ),
+                                        end, [], [query_functions( Name, ID, SQL ) || { ID, SQL } <- QueriesUnique] ),
     Forms               = [ModForm, FunctionExports | Functions],
     case compile:forms( Forms, [verbose, report_errors, report_warnings] ) of
         { ok, Mod, Bin } ->
@@ -73,25 +73,26 @@ query_function_exports( Queries ) ->
 %%  execution on the default connection pool and the second take an additional initial parameter indicating the pool on which the statement 
 %%  should be executed.
 %%
-query_functions( Name, SQL ) ->
+query_functions( Module, Name, SQL ) ->
     ArgsVar     = erl_syntax:variable( "Args" ),
     PoolVar     = erl_syntax:variable( "PoolId" ),
-    
+    Statement   = erl_syntax:tuple( [erl_syntax:atom( Module ), erl_syntax:atom( Name )] ),
+
     Body1        = [
-        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [erl_syntax:atom( Name ), erl_syntax:string( SQL )] ),
-        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [erl_syntax:atom( Name ), erl_syntax:list( [] )] )
+        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [Statement, erl_syntax:string( SQL )] ),
+        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [Statement, erl_syntax:list( [] )] )
     ],
     Clause1      = erl_syntax:clause( [], [], Body1 ),
     
     Body2        = [
-        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [erl_syntax:atom( Name ), erl_syntax:string( SQL )] ),
-        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [erl_syntax:atom( Name ), ArgsVar] )
+        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [Statement, erl_syntax:string( SQL )] ),
+        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [Statement, ArgsVar] )
     ],
     Clause2      = erl_syntax:clause( [ArgsVar], [], Body2 ),
     
     Body3        = [
-        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [erl_syntax:atom( Name ), erl_syntax:string( SQL )] ),
-        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [PoolVar, erl_syntax:atom( Name ), ArgsVar] )
+        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( prepare ), [Statement, erl_syntax:string( SQL )] ),
+        erl_syntax:application( erl_syntax:atom( sequel ), erl_syntax:atom( execute ), [PoolVar, Statement, ArgsVar] )
     ],
     Clause3      = erl_syntax:clause( [PoolVar, ArgsVar], [], Body3 ),
 

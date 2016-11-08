@@ -61,7 +61,7 @@ handle_call( { prepare, Statement, SQL }, _From, State = #state{ connection = Co
 handle_call( { execute, Statement, Args }, _From, State = #state{ connection = Connection, engine = EngineMod } ) ->
     { reply, EngineMod:execute( Connection, Statement, Args ), State };
 
-handle_call( { query, SQL }, _From, State = #state{ connection = Connection, engine = EngineMod } ) when is_atom( SQL ) ->
+handle_call( { query, SQL }, _From, State = #state{ connection = Connection, engine = EngineMod } ) when is_atom( SQL ); is_tuple( SQL ) ->
     case sl_query_map:get( SQL ) of
         undefined ->
             { reply, { error, undefined_query }, State };

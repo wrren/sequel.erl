@@ -24,7 +24,7 @@ stop() ->
 %%	@doc Get the query string corresponding to the given statement name
 %%
 -spec get( atom(), atom() ) -> undefined | string().
-get( PoolName, Statement ) when is_atom( Statement ) ->
+get( PoolName, Statement ) ->
 	case ets:lookup( ?MODULE, { PoolName, Statement } ) of
 		[{ { PoolName, Statement }, SQL }]	-> SQL;
 		_ 					                -> undefined
@@ -34,7 +34,7 @@ get( PoolName, Statement ) when is_atom( Statement ) ->
 %%	@doc Add a query string and associate it with the given statement name
 %%
 -spec put( atom(), atom(), string() ) -> ok.
-put( PoolName, Statement, SQL ) when is_atom( Statement ), is_list( SQL ) ->
+put( PoolName, Statement, SQL ) when is_list( SQL ) ->
     case ets:lookup( ?MODULE, { PoolName, Statement } ) of
 		[{ { PoolName, Statement }, _SQL }]	    -> ok;
 		_ 					                    -> gen_server:call( ?MODULE, { put, PoolName, Statement, SQL } )

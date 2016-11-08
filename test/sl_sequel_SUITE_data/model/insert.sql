@@ -1,0 +1,1 @@
+INSERT INTO sequel_model ( data ) VALUES ( ? )

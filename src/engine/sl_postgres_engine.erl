@@ -27,7 +27,7 @@ connect( { _PoolID, _Size }, Args = #{   database := Database,
 
 
 prepare( Conn, ID, SQL ) ->
-    case epgsql:parse( Conn, atom_to_list( ID ), SQL, [] ) of
+    case epgsql:parse( Conn, io_lib:format( "~p", [ID] ), SQL, [] ) of
         { ok, _Statement } ->
             { ok, Conn };
         { error, Reason } ->
@@ -47,7 +47,7 @@ query( Conn, SQL ) ->
     end.
 
 execute( Conn, ID, Args ) ->
-    case epgsql:prepared_query( Conn, atom_to_list( ID ), Args ) of
+    case epgsql:prepared_query( Conn, io_lib:format( "~p", [ID] ), Args ) of
         { ok, Columns, Rows } ->
             { ok, result_map( Columns, Rows ) };
         { ok, Count } ->

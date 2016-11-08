@@ -36,13 +36,13 @@ connect( PoolName, EngineMod, Args ) when is_atom( PoolName ), is_atom( EngineMo
 %%
 %%  @doc Prepare the given query and associate it with the provided prepared statement name
 %%
-prepare( Statement, SQL ) when is_atom( Statement ), is_list( SQL ) ->
+prepare( Statement, SQL ) when is_list( SQL ) ->
     prepare( ?DEFAULT_POOL, Statement, SQL ).
 
 %%
 %%  @doc Prepare the given query and associate it with the provided prepared statement name
 %%
-prepare( PoolName, Statement, SQL ) when is_atom( PoolName ), is_atom( Statement ), is_list( SQL ) ->
+prepare( PoolName, Statement, SQL ) when is_atom( PoolName ), is_list( SQL ) ->
     sl_statement_map:put( PoolName, Statement, SQL ),
     poolboy:transaction( PoolName, fun( Worker ) ->
         sl_worker:prepare( Worker, Statement, SQL )

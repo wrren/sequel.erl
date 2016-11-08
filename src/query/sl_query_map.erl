@@ -51,7 +51,7 @@ load_dir( Path ) ->
 load_dir( Path, Prefix ) ->
 	case file:list_dir( Path ) of
 		{ ok, Filenames } ->
-			{ ok, lists:usort( lists:filtermap( fun( Filename ) ->
+			{ ok, lists:usort( lists:flatten( lists:filtermap( fun( Filename ) ->
 				case file:read_file_info( filename:join( Path, Filename ) ) of
 					{ ok, #file_info{ type = directory } } ->
 						ID = list_to_atom( filename:rootname( Filename ) ),
@@ -70,7 +70,7 @@ load_dir( Path, Prefix ) ->
 					_ ->
 						false
 				end 
-			end, Filenames ) ) };
+			end, Filenames ) ) ) };
 		{ error, Reason } ->
 			{ error, Reason }
 	end.
