@@ -29,10 +29,13 @@ Usage
 
 application:start( sequel ),
 sequel:connect( #{ pool_size => 1, engine => sqlite, path => filename:join( code:priv_dir( ?APPLICATION ), "db.sqlite" ) } ),
+%% Load all queries under priv/sql...
+sl_query_map:load_dir( filename:join( code:priv_dir( ?APPLICATION ), "sql" ) ),
 
+%% Prepare and execute item_count.sql
 { ok, [Count] } = sequel:execute( item_count, [] ),
 
-sl_query_map:load_dir( filename:join( code:priv_dir( ?APPLICATION ), "sql" ) ),
+%% Generate modules based on directory structure (user module)
 sl_query_map:generate_modules(),
 
 %% Prepares and executes sql/user/create_table.sql
