@@ -17,13 +17,12 @@ load( Config ) ->
 
 compile( _Config ) ->
     Module = lists:foldl(   fun( Query, Module ) ->
-                                { ok, Mod2 } = sl_module:add_query( Module, Query, sl_query_map:get( Query ) ),
-                                Mod2
+                                sl_module:add_query( Module, Query, sl_query_map:get( Query ) )
                             end, sl_module:new( sql_test ), [create, drop, insert, select] ),
     { ok, _ } = sl_module:compile( Module ).
 
 create( _Config ) ->
-    { ok, _ } = sql_test:create( [] ).
+    { ok, _ } = sql_test:create().
 
 insert( _Config ) ->
     sql_test:insert( [<<"Hello">>] ),
@@ -34,7 +33,7 @@ select( _Config ) ->
     { ok, [#{ id := 2, data := <<"World">> }] } = sql_test:select( [2] ).
 
 drop( _Config ) ->
-    { ok, _ } = sql_test:drop( [] ).
+    { ok, _ } = sql_test:drop().
 
 end_per_suite( _Config ) ->
     application:stop( sequel ).
