@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS sequel_test_table ( 
+    id INT(10) NOT NULL AUTO_INCREMENT,
+    data TEXT,
+    PRIMARY KEY(id) 
+) ENGINE=InnoDB CHARSET=utf8

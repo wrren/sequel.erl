@@ -1,9 +1,10 @@
--module( sequel_app ).
--behaviour( application ).
--export( [start/2, stop/1] ).
+-module(sequel_app).
 
-start( _StartType, _StartArgs ) ->
-    sequel_sup:start_link().    
+-behaviour(application).
 
-stop( _State ) ->
-    ok.
+-export([start/2, stop/1]).
+
+start(_StartType, _StartArgs) ->
+    sequel_sup:start_link().
+
+stop(_State) -> ok.

@@ -17,19 +17,27 @@
 %%  @doc Connect to the database using the provided options. Option formatting depends on the
 %%  database type selected.
 %%
--callback connect( Pool :: { Size :: integer(), ID :: atom() }, Options :: map() ) -> { ok, Connection :: connection() } | { error, term() }.
+-callback connect( Pool :: { Size :: integer(), ID :: atom() }, Options :: map() ) -> 
+	{ ok, Connection :: connection() } | 
+	{ error, term() }.
 
 %%
 %%  @doc Prepare a prepared statement
 %%
--callback prepare( Connection :: connection(), Statement :: statement(), SQL :: sql() ) -> { ok, Connection :: connection() } | { error, term() }.
+-callback prepare( Connection :: connection(), Statement :: statement(), SQL :: sql() ) -> 
+	{ ok, Connection :: connection() } | 
+	{ error, term() }.
 
 %%
 %%  @doc Execute a raw query
 %%
--callback query( Connection :: connection(), SQL :: sql() ) -> { ok, Result :: result() } | { error, term() }.
+-callback query( Connection :: connection(), SQL :: sql() ) -> 
+	{ ok, Result :: result() } | 
+	{ error, term() }.
 
 %%
 %%  @doc Execute a prepared statement
 %%
--callback execute( Connection :: connection(), Statement :: statement(), Parameters :: [term()] ) -> { ok, Result :: result() } | { error, term() }.
+-callback execute( Connection :: connection(), Statement :: statement(), Parameters :: [term()] ) -> 
+	{ ok, Result :: result() } | 
+	{ error, term() }.
